@@ -390,6 +390,9 @@ pub enum OfflineWalletSubCommand {
         /// Fee rate to use in sat/vbyte.
         #[clap(name = "SATS_VBYTE", short = 'f', long = "fee_rate")]
         fee_rate: Option<f32>,
+        /// Fee absolute to use in sat.
+        #[clap(name = "SATS", long = "fee_abs")]
+        fee_abs: Option<u64>,
         /// Selects which policy should be used to satisfy the external descriptor.
         #[clap(name = "EXT_POLICY", long = "external_policy")]
         external_policy: Option<String>,
@@ -433,6 +436,9 @@ pub enum OfflineWalletSubCommand {
         /// The new targeted fee rate in sat/vbyte.
         #[clap(name = "SATS_VBYTE", short = 'f', long = "fee_rate")]
         fee_rate: f32,
+        /// Fee absolute to use in sat.
+        #[clap(name = "SATS", long = "fee_abs")]
+        fee_abs: Option<u64>,
     },
     /// Returns the available spending policies for the descriptor.
     Policies,
@@ -1042,6 +1048,7 @@ mod test {
                     utxos: Some(vec!(outpoint1, outpoint2)),
                     unspendable: None,
                     fee_rate: None,
+                    fee_abs: None,
                     external_policy: None,
                     internal_policy: None,
                     add_data: None,

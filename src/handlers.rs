@@ -126,6 +126,7 @@ where
             utxos,
             unspendable,
             fee_rate,
+            fee_abs,
             external_policy,
             internal_policy,
             add_data,
@@ -149,6 +150,10 @@ where
 
             if let Some(fee_rate) = fee_rate {
                 tx_builder.fee_rate(FeeRate::from_sat_per_vb(fee_rate));
+            }
+
+            if let Some(fee_abs) = fee_abs {
+                tx_builder.fee_absolute(fee_abs);
             }
 
             if let Some(utxos) = utxos {
@@ -193,11 +198,16 @@ where
             utxos,
             unspendable,
             fee_rate,
+            fee_abs,
         } => {
             let txid = Txid::from_str(txid.as_str()).map_err(|s| Error::Generic(s.to_string()))?;
 
             let mut tx_builder = wallet.build_fee_bump(txid)?;
-            tx_builder.fee_rate(FeeRate::from_sat_per_vb(fee_rate));
+            if let Some(fee_abs) = fee_abs {
+                tx_builder.fee_absolute(fee_abs);
+            } else {
+                tx_builder.fee_rate(FeeRate::from_sat_per_vb(fee_rate));
+            }
 
             if let Some(address) = shrink_address {
                 let script_pubkey = address.script_pubkey();
@@ -403,7 +413,7 @@ where
     feature = "compact_filters",
     feature = "rpc"
 ))]
-pub(crate) fn is_final(psbt: &PartiallySignedTransaction) -> Result<(), Error> {
+pub fn is_final(psbt: &PartiallySignedTransaction) -> Result<(), Error> {
     let unsigned_tx_inputs = psbt.unsigned_tx.input.len();
     let psbt_inputs = psbt.inputs.len();
     if unsigned_tx_inputs != psbt_inputs {
@@ -588,7 +598,7 @@ pub(crate) fn handle_ext_reserves_subcommand(
 
 /// The global top level handler.
 #[maybe_async]
-pub(crate) fn handle_command(cli_opts: CliOpts) -> Result<String, Error> {
+pub fn handle_command(cli_opts: CliOpts) -> Result<String, Error> {
     let network = cli_opts.network;
     let home_dir = prepare_home_dir(cli_opts.datadir)?;
     let result = match cli_opts.subcommand {

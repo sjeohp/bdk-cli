@@ -58,7 +58,7 @@ use std::sync::Arc;
 
 /// Create a randomized wallet name from the descriptor checksum.
 /// If wallet options already includes a name, use that instead.
-pub(crate) fn maybe_descriptor_wallet_name(
+pub fn maybe_descriptor_wallet_name(
     wallet_opts: WalletOpts,
     network: Network,
 ) -> Result<WalletOpts, Error> {
@@ -266,7 +266,7 @@ pub(crate) fn prepare_electrum_datadir(home_path: &Path) -> Result<PathBuf, Erro
 
 #[allow(unused_variables)]
 /// Open the wallet database.
-pub(crate) fn open_database(
+pub fn open_database(
     wallet_opts: &WalletOpts,
     home_path: &Path,
 ) -> Result<AnyDatabase, Error> {
@@ -299,7 +299,7 @@ pub(crate) fn open_database(
 
 /// Create a new backend node at given datadir.
 #[allow(dead_code)]
-pub(crate) fn new_backend(_datadir: &Path) -> Result<Nodes, Error> {
+pub fn new_backend(_datadir: &Path) -> Result<Nodes, Error> {
     #[cfg(feature = "regtest-node")]
     let bitcoind = {
         // Configure node directory according to cli options
@@ -380,7 +380,7 @@ pub(crate) fn new_backend(_datadir: &Path) -> Result<Nodes, Error> {
 ))]
 /// Create a new blockchain for a given [Nodes] if available
 /// or else create one from the wallet configuration options.
-pub(crate) fn new_blockchain(
+pub fn new_blockchain(
     _network: Network,
     wallet_opts: &WalletOpts,
     _backend: &Nodes,
@@ -496,7 +496,7 @@ pub(crate) fn new_blockchain(
 }
 
 /// Create a new wallet from given wallet configuration options.
-pub(crate) fn new_wallet<D>(
+pub fn new_wallet<D>(
     network: Network,
     wallet_opts: &WalletOpts,
     database: D,
